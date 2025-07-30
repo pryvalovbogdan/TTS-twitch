@@ -1,14 +1,34 @@
 import crypto from 'crypto';
 import dotenv from 'dotenv';
 import express from 'express';
+import open from 'open';
 import PlayerInstance from 'play-sound';
-import WebSocket from 'ws';
+import WebSocket, { WebSocketServer } from 'ws';
 
 import { soundMap } from './src/helpers/consts.js';
 import { playAudio } from './src/helpers/utils.js';
 import { speakWithElevenLabs } from './src/tts_eleven_labs.js';
 
 dotenv.config();
+
+const server = new WebSocketServer({ port: 3000 });
+
+let wsInstance = null;
+
+server.on('connection', ws => {
+  console.log('Client connected');
+
+  wsInstance = ws;
+
+  ws.on('message', message => {
+    console.log('Received:', message);
+    ws.send(JSON.stringify({ type: 'response', payload: 'Hello from server!' }));
+  });
+
+  ws.on('close', () => {
+    console.log('Client disconnected');
+  });
+});
 
 const player = PlayerInstance();
 //https://twitchtokengenerator.com/
@@ -44,6 +64,14 @@ socket.addEventListener('message', event => {
 
           return;
         }
+      }
+
+      // Example: respond or TTS
+      if (userMessage.includes('youtube')) {
+        wsInstance.send(JSON.stringify({ type: 'stop', payload: userMessage }));
+        open(userMessage, { app: { name: 'google chrome' } });
+
+        return;
       }
 
       console.log(`User: ${username}, Message: ${userMessage}`);
@@ -132,9 +160,9 @@ app.post('/eventsub', (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Example app listening at http://localhost:${port}`);
+// });
 
 function getSecret() {
   // TODO: Get secret from secure storage. This is the secret you pass
