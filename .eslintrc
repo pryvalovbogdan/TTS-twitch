@@ -1,0 +1,132 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "extends": [
+    "plugin:prettier/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+
+  "env": {
+    "browser": true,      // browser global variables.
+    "node": true,         // Node.js global variables and Node.js-specific rules.
+    "worker": false,      // web workers global variables.
+    "amd": false,         // defines require() and define() as global variables as per the amd spec.
+    "mocha": true,        // adds all of the Mocha testing global variables.
+    "jasmine": false,     // adds all of the Jasmine testing global variables for version 1.3 and 2.0.
+    "phantomjs": false,   // phantomjs global variables.
+    "jquery": true,       // jquery global variables.
+    "prototypejs": false, // prototypejs global variables.
+    "shelljs": false,     // shelljs global variables.
+    "meteor": false,      // meteor global variables.
+    "mongo": false,       // mongo global variables.
+    "applescript": false, // applescript global variables.
+    "es6": true,          // enable all ECMAScript 6 features except for modules.
+    "jest": true          // jest global variables.
+  },
+
+  "plugins": [
+    "prettier",
+    "@typescript-eslint",
+    "unused-imports"
+  ],
+
+  "rules": {
+    // 0 - turn the rule off
+    // 1 - turn the rule on as a warning (doesn't affect exit code)
+    // 2 - turn the rule on as an error (exit code will be 1)
+
+    // Prettier configuration
+    "prettier/prettier": ["error", {
+      "bracketSameLine": false,     // Put the > of a multi-line JSX element at the end of the last line instead of being alone on the next line
+      "printWidth": 120,            // Specify the line length that the printer will wrap on
+      "semi": true,                 // Print semicolons at the ends of statements.
+      "singleQuote": true,          // Use single quotes instead of double quotes.
+      "tabWidth": 2,                // Specify the number of spaces per indentation-level.
+      "trailingComma": "all",       // Print trailing commas wherever possible when multi-line.
+      "useTabs": false,             // Indent lines with tabs instead of spaces.
+      "endOfLine": "lf",            // Line Feed only (\n),
+      "arrowParens": "avoid",        // Include parentheses around a sole arrow function parameter.
+      "importOrder": ["<THIRD_PARTY_MODULES>", "^@", "^src/(.*)$",  "^[./]"],
+      "importOrderSeparation": true,
+      "importOrderSortSpecifiers": true,
+      "plugins": ["@trivago/prettier-plugin-sort-imports"]
+    }],
+
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "varsIgnorePattern": "^_",
+        "args": "after-used",
+        "argsIgnorePattern": "^_"
+      }
+    ],
+
+    // Possible Errors
+    "no-extra-semi": 1,                       // disallow unnecessary semicolons
+    "no-inner-declarations": 2,               // disallow function or variable declarations in nested blocks
+
+    // Best Practices
+
+    "curly": 2,                       // specify curly brace conventions for all control statements
+    "no-eval": 2,                     // disallow use of eval()
+    "no-extend-native": 2,            // disallow adding to native types
+    "no-new-wrappers": 2,             // disallows creating new instances of String, Number, and Boolean
+    "no-with": 2,                     // disallow use of the with statement
+    "brace-style": ["error", "1tbs"], // enforce consistent brace style for blocks
+
+    // Strict Mode
+
+
+    // Variables
+    "no-undef": 2,                   // disallow use of undeclared variables unless mentioned in a /*global */ block
+    "no-unused-vars": 1,              // disallow unused variables
+
+    // Node.js
+
+
+    // Stylistic Issues
+    "array-bracket-spacing": [2, "never"], // enforce spacing inside array brackets (off by default)
+    // this option sets a specific tab width for your code (off by default)
+
+    "no-array-constructor": 2,             // disallow use of the Array constructor
+    "no-mixed-spaces-and-tabs": 2,         // disallow mixed spaces and tabs for indentation
+    "no-new-object": 2,                    // disallow use of the Object constructo
+    "semi": 1,                             // require or disallow use of semicolons instead of ASI
+    "@typescript-eslint/no-var-requires": 1,
+
+    // ECMAScript 6
+
+    "padding-line-between-statements": [ "error",
+      { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*"},
+      { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"]},
+
+      { "blankLine": "always", "prev": "import", "next": "*" },
+      { "blankLine": "any", "prev": "import", "next": "import" },
+
+      { "blankLine": "always", "prev": "block-like", "next": "*" },
+
+      { "blankLine": "always", "prev": "*", "next": "if" },
+      { "blankLine": "always", "prev": "if", "next": "*" },
+
+      { "blankLine": "always", "prev": "*", "next": "multiline-expression" },
+      { "blankLine": "always", "prev": "multiline-expression", "next": "*" },
+
+      { "blankLine": "always", "prev": "*", "next": "for" },
+      { "blankLine": "always", "prev": "for", "next": "*" },
+
+      { "blankLine": "always", "prev": "*", "next": "function" },
+      { "blankLine": "always", "prev": "function", "next": "*" },
+
+      { "blankLine": "always", "prev": "*", "next": "return" },
+
+      { "blankLine": "always", "prev": ["case", "default"], "next": "*" }
+    ],
+    "lines-between-class-members": ["error", "always"],
+    "@typescript-eslint/no-explicit-any": 0
+  }
+}
