@@ -25,11 +25,19 @@ const soundMap = {
   },
   emotionaldamage: {
     path: 'sounds/emotionaldamage.mp3',
-    trigger: ['you are so bad', 'look at you'],
+    trigger: ['you are so bad', 'look at you', 'disgusting'],
   },
   tobey: {
     path: 'sounds/tobey.mp3',
-    trigger: ['tobey', 'spider-man', 'what did you just said', 'are u talking to me?', 'що ти сказав'],
+    trigger: [
+      'tobey',
+      'spider-man',
+      'what did you just said',
+      'are u talking to me?',
+      'що ти сказав',
+      'great power',
+      'great responsibility',
+    ],
   },
   thatswhatshesaid: {
     path: 'sounds/thatswhatshesaid.mp3',
@@ -93,4 +101,40 @@ const voicesGoogleCloud = [
 ];
 const fileNameGoogleCloud = 'sounds/output-googlecloud.mp3';
 
-export { soundMap, voicesElevenLabs, ELEVEN_LABS_URL, fileNameElevenLabs, voicesGoogleCloud, fileNameGoogleCloud };
+const getFirstTabsPlayingTittle = `osascript -e '
+            tell application "Google Chrome"
+              repeat with w in windows
+                repeat with t in tabs of w
+                  if URL of t contains "youtube.com/watch" then
+                    return title of t
+                  end if
+                end repeat
+              end repeat
+            end tell
+          '`;
+
+const stopPlayingMusicMac = `osascript -e 'tell application "Music" to pause'`;
+
+const stopPlayingAllTabsChrome = `osascript -e '
+            tell application "Google Chrome"
+              repeat with w in windows
+                repeat with t in tabs of w
+                  if URL of t contains "youtube.com/watch" then
+                    tell t to execute javascript "document.querySelector(\\"video\\").pause();"
+                  end if
+                end repeat
+              end repeat
+            end tell
+           '`;
+
+export {
+  soundMap,
+  voicesElevenLabs,
+  ELEVEN_LABS_URL,
+  fileNameElevenLabs,
+  voicesGoogleCloud,
+  fileNameGoogleCloud,
+  getFirstTabsPlayingTittle,
+  stopPlayingMusicMac,
+  stopPlayingAllTabsChrome,
+};
