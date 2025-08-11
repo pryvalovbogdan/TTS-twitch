@@ -1,14 +1,19 @@
 import crypto from 'crypto';
 import dotenv from 'dotenv';
 import express from 'express';
+import open from 'open';
 import PlayerInstance from 'play-sound';
-import WebSocket from 'ws';
+import WebSocket, { WebSocketServer } from 'ws';
 
 import { soundMap } from './src/helpers/consts.js';
 import { playAudio } from './src/helpers/utils.js';
 import { speakWithElevenLabs } from './src/tts_eleven_labs.js';
 
 dotenv.config();
+
+const server = new WebSocketServer({ port: 3000 });
+
+let wsInstance = null;
 
 const player = PlayerInstance();
 //https://twitchtokengenerator.com/
@@ -18,6 +23,27 @@ const channel = process.env.TWITCH_CHANNEL_NAME;
 
 //https://dev.twitch.tv/docs/chat/irc/
 const socket = new WebSocket('wss://irc-ws.chat.twitch.tv:443');
+
+server.on('connection', ws => {
+  console.log('Client connected');
+
+  wsInstance = ws;
+
+  ws.on('message', message => {
+    console.log('Received:', JSON.parse(message));
+    const messageParsed = JSON.parse(message);
+
+    if (messageParsed.type === 'SONG_NAME' && messageParsed.payload) {
+      socket.send(`PRIVMSG #${channel} : The song name is: ${messageParsed.payload}`);
+    }
+
+    ws.send(JSON.stringify({ type: 'response', payload: 'Hello from server!' }));
+  });
+
+  ws.on('close', () => {
+    console.log('Client disconnected');
+  });
+});
 
 socket.addEventListener('open', () => {
   socket.send(`PASS oauth:${oAuth}`);
@@ -36,6 +62,10 @@ socket.addEventListener('message', event => {
       const username = message.substring(1, prefixEnd);
       const userMessage = message.substring(messageStart + 2);
 
+      if (username.includes('dotabod')) {
+        return;
+      }
+
       for (const key in soundMap) {
         const { path, trigger } = soundMap[key];
 
@@ -46,15 +76,45 @@ socket.addEventListener('message', event => {
         }
       }
 
+      if (userMessage.includes('Cheap viewers') || userMessage.includes('Best viewers')) {
+        return;
+      }
+
+      if (userMessage.includes('!song')) {
+        try {
+          // In case of using os default commands
+          // const result = execSync(getFirstTabsPlayingTittle, { encoding: 'utf8' }).trim();
+
+          // socket.send(`PRIVMSG #${channel} :Current song: ${result}`);
+          wsInstance.send(JSON.stringify({ type: 'GET_SONG' }));
+        } catch (err) {
+          console.error('Error fetching song title:', err);
+          socket.send(`PRIVMSG #${channel} :Couldn't get the current song 😢`);
+        }
+
+        return;
+      }
+
+      if (userMessage.includes('youtube')) {
+        // In case of using os default commands
+        // try {
+        //   execSync(stopPlayingMusicMac);
+        //   execSync(stopPlayingAllTabsChrome);
+        // } catch (e) {
+        //   console.error('Error stopping playback:', e);
+        // }
+
+        wsInstance.send(JSON.stringify({ type: 'stop', payload: userMessage }));
+        open(userMessage, { app: { name: 'google chrome' } });
+
+        return;
+      }
+
       console.log(`User: ${username}, Message: ${userMessage}`);
       speakWithElevenLabs(`${username} said:  ${userMessage} `, player);
+
       // U can switch to google cloud but it takes much longer to sound the text and sounds more robotic
       // TTSWithGoogleCloud(`${username} said:  ${userMessage} `, player);
-
-      // Example: respond or TTS
-      if (userMessage.includes('Hello World')) {
-        socket.send(`PRIVMSG #${channel} :cringe`);
-      }
     }
   }
 
@@ -132,9 +192,9 @@ app.post('/eventsub', (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Example app listening at http://localhost:${port}`);
+// });
 
 function getSecret() {
   // TODO: Get secret from secure storage. This is the secret you pass
