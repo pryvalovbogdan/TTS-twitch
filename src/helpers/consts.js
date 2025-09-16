@@ -5,7 +5,7 @@ const soundMap = {
   },
   fart: {
     path: 'sounds/fart.mp3',
-    trigger: ['wizardsdev', 'you are wrong', 'shit', 'fart', 'angular'],
+    trigger: ['you are wrong', 'shit', 'fart', 'angular'],
   },
   sad: {
     path: 'sounds/sad.mp3',
@@ -128,6 +128,7 @@ const stopPlayingAllTabsChrome = `osascript -e '
            '`;
 
 const TWITCH_BASE_URL = 'https://api.twitch.tv/helix/moderation/';
+const TWITCH_WS_URL = 'wss://irc-ws.chat.twitch.tv:443';
 
 const WS_EVENT_TYPES = {
   GET_SONG: 'GET_SONG',
@@ -136,6 +137,8 @@ const WS_EVENT_TYPES = {
 };
 
 const spamMessages = ['Cheap viewers', 'Best viewers'];
+
+const skipUsers = ['dotabod', 'streamelements', 'nightbot'];
 
 export {
   soundMap,
@@ -149,5 +152,7 @@ export {
   stopPlayingAllTabsChrome,
   TWITCH_BASE_URL,
   WS_EVENT_TYPES,
+  TWITCH_WS_URL,
   spamMessages,
+  skipUsers,
 };

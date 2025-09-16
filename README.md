@@ -201,12 +201,12 @@ interface SoundEffect {
 ### WebSocket Message Types
 ```typescript
 type ClientMessage = {
-  type: 'SONG_NAME';
+  type: 'SONG_NAME_RECEIVED';
   payload: string;
 }
 
 type ServerMessage = {
-  type: 'GET_SONG' | 'stop';
+  type: 'GET_SONG' | 'STOP_AUDIO';
   payload?: string;
 }
 ```

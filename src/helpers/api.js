@@ -7,7 +7,6 @@ export async function deleteMessage(messageId, channelId) {
   console.log('Attempting to delete message:', messageId, 'in channel:', channelId);
 
   try {
-    // Use the correct Twitch API endpoint for message deletion
     const response = await axios.delete(`${TWITCH_BASE_URL}chat`, {
       params: {
         broadcaster_id: channelId,
