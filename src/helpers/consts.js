@@ -5,7 +5,7 @@ const soundMap = {
   },
   fart: {
     path: 'sounds/fart.mp3',
-    trigger: ['wizardsdev', 'you are wrong', 'shit', 'fart', 'angular'],
+    trigger: ['you are wrong', 'shit', 'fart', 'angular'],
   },
   sad: {
     path: 'sounds/sad.mp3',
@@ -86,7 +86,7 @@ const soundMap = {
     trigger: ['directed by', 'boring', 'not interesting'],
   },
 };
-
+// Voices ids
 const voicesElevenLabs = ['CeNX9CMwmxDxUF5Q2Inm', 'eVItLK1UvXctxuaRV2Oq', 'flHkNRp1BlvT73UL6gyz'];
 const ELEVEN_LABS_URL = 'https://api.elevenlabs.io/v1/text-to-speech/';
 const fileNameElevenLabs = 'sounds/output-elevenlabs.mp3';
@@ -127,6 +127,19 @@ const stopPlayingAllTabsChrome = `osascript -e '
             end tell
            '`;
 
+const TWITCH_BASE_URL = 'https://api.twitch.tv/helix/moderation/';
+const TWITCH_WS_URL = 'wss://irc-ws.chat.twitch.tv:443';
+
+const WS_EVENT_TYPES = {
+  GET_SONG: 'GET_SONG',
+  SONG_NAME_RECEIVED: 'SONG_NAME_RECEIVED',
+  STOP_AUDIO: 'STOP_AUDIO',
+};
+
+const spamMessages = ['Cheap viewers', 'Best viewers'];
+
+const skipUsers = ['dotabod', 'streamelements', 'nightbot'];
+
 export {
   soundMap,
   voicesElevenLabs,
@@ -137,4 +150,9 @@ export {
   getFirstTabsPlayingTittle,
   stopPlayingMusicMac,
   stopPlayingAllTabsChrome,
+  TWITCH_BASE_URL,
+  WS_EVENT_TYPES,
+  TWITCH_WS_URL,
+  spamMessages,
+  skipUsers,
 };

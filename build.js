@@ -12,7 +12,7 @@ build({
     'dotenv',
     'speaker',
     'play-sound',
-    'express', // ✅ Add this
+    'express',
     'tmi.js', // Optional: if it causes similar issues
     '@google-cloud/text-to-speech', // Optional: if used in dynamic ways
   ],
